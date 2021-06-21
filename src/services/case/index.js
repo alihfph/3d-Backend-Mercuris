@@ -3,9 +3,9 @@ import express from "express";
 
 import threeDModel from "./schema.js";
 
-const router = express.Router();
+const threeDrouter = express.Router();
 
-router.post("/", async (req, res, next) => {
+threeDrouter.post("/", async (req, res, next) => {
   try {
     const newthreeD = new threeDModel(req.body);
     const { _id } = await newthreeD.save();
@@ -15,9 +15,9 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.get("/", async (req, res, next) => {
+threeDrouter.get("/", async (req, res, next) => {
   try {
-    const total3D = await threeDModel.countDocuments(query.criteria);
+    const total3D = await threeDModel.find();
 
     res.send(total3D);
   } catch (error) {
@@ -26,7 +26,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+threeDrouter.get("/:id", async (req, res, next) => {
   try {
     const threeD = await threeDModel.findById(req.params.id);
     res.send(threeD);
@@ -36,7 +36,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.put("/:id", async (req, res, next) => {
+threeDrouter.put("/:id", async (req, res, next) => {
   try {
     const modified3D = await threeDModel.findByIdAndUpdate(
       req.params.id,
@@ -57,7 +57,7 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+threeDrouter.delete("/:id", async (req, res, next) => {
   try {
     const threeD = await threeDModel.findByIdAndDelete(req.params.id);
     if (threeD) {
@@ -71,4 +71,4 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-export default router;
+export default threeDrouter;

@@ -6,6 +6,7 @@ import { Scene } from 'three';
 const scene = new Scene();
 
 import threeDRouter from "./services/case/index.js";
+import router from "./services/users/index.js"
 
 import {
   notFoundErrorHandler,
@@ -24,6 +25,7 @@ server.use(express.json());
 server.use(cors());
 
 server.use("/3D", threeDRouter);
+server.use("/users", router);
 
 // ERROR HANDLERS MIDDLEWARES
 
