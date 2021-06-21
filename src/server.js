@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import listEndpoints from "express-list-endpoints";
 import mongoose from "mongoose";
+import { Scene } from 'three';
+const scene = new Scene();
 
 import threeDRouter from "./services/case/index.js";
 
@@ -16,9 +18,8 @@ const server = express();
 const port = process.env.PORT;
 
 server.use(express.json());
-server.use(express.static(__dirname + '/public'))
-server.use('/build/', express.static(path.join(__dirname, 'node_modules/three/build')));
-server.use('/jsm/', express.static(path.join(__dirname, 'node_modules/three/examples/jsm')));
+
+
 
 server.use(cors());
 

@@ -8,7 +8,6 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
   try {
     const newthreeD = new threeDModel(req.body);
-
     const { _id } = await newthreeD.save();
     res.status(201).send(_id);
   } catch (error) {
@@ -60,7 +59,7 @@ router.put("/:id", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
   try {
-    const threeD = await AuthorModel.findByIdAndDelete(req.params.id);
+    const threeD = await threeDModel.findByIdAndDelete(req.params.id);
     if (threeD) {
       res.send("Deleted");
     } else {
