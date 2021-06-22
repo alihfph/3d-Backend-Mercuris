@@ -1,61 +1,68 @@
 import express from "express"
-
 import UserModel from "./schema.js"
+import q2m from "query-to-mongo"
+import createError from "http-errors"
+import dotenv from "dotenv"
+import { authenticate } from "../../auth/tools.js"
+import { JWTAuthMiddleware, authorize } from "../../auth/index.js"
 
-const router = express.Router();
+const router = express.Router()
 
-router.post("/", async (req, res, next) => {
+router.post("/register", async (req, res, next) => {
     try {
       const newUser = new UserModel(req.body)
+      console.log(req.body)
       const { _id } = await newUser.save()
   
       res.status(201).send(_id)
     } catch (error) {
+      console.log(error)
+      next(error)
+    }
+  })
+
+  router.post("/login", async (req, res, next) => {
+    try {
+      const { email, password } = req.body
+      console.log(req.body)
+      const user = await UserModel.checkCredentials(email, password)
+      const token = await authenticate(user)
+      res.send(token)
+    } catch (error) {
+      next(error)
+      console.log(error)
+    }
+  })
+  
+  router.get("/me", JWTAuthMiddleware, async (req, res, next) => {
+    try {
+      res.send(req.user)
+      console.log(req.user)
+    } catch (error) {
+      console.log(error)
       next(error)
     }
   })
   
-  router.get("/", async (req, res, next) => {
-    try {
-      const total3D = await UserModel.find();
+
   
-      res.send(total3D);
-    } catch (error) {
-      console.log(error);
-      next(error);
-    }
-  });
-  
-  router.get("/:id", async (req, res, next) => {
+  router.put("/me", JWTAuthMiddleware, async (req, res, next) => {
     try {
-      const threeD = await UserModel.findById(req.params.id);
-      res.send(threeD);
-    } catch (error) {
-      console.log(error);
-      next(error);
-    }
-  });
+      console.log(req.body)
+      
+      // req.user.name = req.body.name
   
-  router.put("/:id", async (req, res, next) => {
-    try {
-      const modified3D = await UserModel.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        {
-          runValidators: true,
-          new: true,
-        }
-      );
-      if (modified3D) {
-        res.send(modified3D);
-      } else {
-        next();
-      }
+      const updates = Object.keys(req.body)
+  
+      updates.forEach(u => (req.user[u] = req.body[u]))
+  
+      await req.user.save()
+  
+      res.status(204, "sone").send("done")
     } catch (error) {
-      console.log(error);
-      next(error);
+      next(error)
     }
-  });
+  })
   
   router.delete("/:id", async (req, res, next) => {
     try {
