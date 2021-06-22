@@ -23,21 +23,32 @@ router.post("/register", async (req, res, next) => {
 
   router.post("/login", async (req, res, next) => {
     try {
-      const { email, password } = req.body
+      const { email, password } = req.body;
       console.log(req.body)
-      const user = await UserModel.checkCredentials(email, password)
-      const token = await authenticate(user)
-      res.send(token)
-    } catch (error) {
-      next(error)
-      console.log(error)
-    }
-  })
   
-  router.get("/me", JWTAuthMiddleware, async (req, res, next) => {
+      const user = await UserModel.checkCredentials(email, password);
+  
+      if (user) {
+        const accessToken = await authenticate(user);
+        res.cookie("accessToken", accessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production" ? true : false,
+          sameSite: false
+        });
+        res.send(accessToken);
+      } else {
+        next(createError(400, "Wrong credentials"));
+      }
+    } catch (error) {
+      console.log(error)
+      next(error);
+    }
+  });
+  
+  router.get("/me",JWTAuthMiddleware, async (req, res, next) => {
     try {
       res.send(req.user)
-      console.log(req.user)
+
     } catch (error) {
       console.log(error)
       next(error)
@@ -48,21 +59,17 @@ router.post("/register", async (req, res, next) => {
   
   router.put("/me", JWTAuthMiddleware, async (req, res, next) => {
     try {
-      console.log(req.body)
-      
-      // req.user.name = req.body.name
-  
-      const updates = Object.keys(req.body)
-  
-      updates.forEach(u => (req.user[u] = req.body[u]))
-  
-      await req.user.save()
-  
-      res.status(204, "sone").send("done")
+      const updates = Object.keys(req.body);
+      console.log(req.user)
+      const updated = updates.forEach((update) => ((req.user )[update] = req.body[update]));
+       console.log(updated)
+     // req.user!.profilePic = req.file.path;
+      await req.user.save();
+      res.send(req.user);
     } catch (error) {
-      next(error)
+      next(error);
     }
-  })
+  });
   
   router.delete("/:id", async (req, res, next) => {
     try {

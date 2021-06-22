@@ -1,8 +1,7 @@
 import jwt from "jsonwebtoken"
 
 export const authenticate = async (user) => {
-    const accessToken = await generateJWT({ _id: user._id })
-  
+    const accessToken = await generateJWT({ _id: user._id })  
     if (accessToken) {
       return accessToken
     } else {

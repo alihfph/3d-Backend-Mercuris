@@ -2,10 +2,16 @@ import express from "express";
 import cors from "cors";
 import listEndpoints from "express-list-endpoints";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 
 
 import threeDRouter from "./services/case/index.js";
 import router from "./services/users/index.js"
+
+var corsOptions = {
+  origin: true,
+  credentials: true,
+};
 
 import {
   notFoundErrorHandler,
@@ -13,16 +19,14 @@ import {
   catchAllErrorHandler,
 } from "./errorHandlers.js";
 
+
 const server = express();
 
 const port = process.env.PORT;
 
 server.use(express.json());
-
-
-
-server.use(cors());
-
+server.use(cors(corsOptions));
+server.use(cookieParser())
 server.use("/3D", threeDRouter);
 server.use("/users", router);
 

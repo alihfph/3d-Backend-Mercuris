@@ -6,10 +6,10 @@ import createError from "http-errors"
 const { Schema, model } = mongoose
 
 const UserSchema = new Schema({
-  firstName: { type: String, required: true },
+  firstName: { type: String },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  role: { type: String, required: true, enum: ["Admin", "User"] },
+  role: { type: String, enum: ["Admin", "User"] },
 
 })
 
@@ -33,13 +33,13 @@ UserSchema.post("save", function (error, doc, next) {
   }
 })
 
-//UserSchema.post("validate", function (error, doc, next) {
-//  if (error) {
-//    next(createError(400, error))
-//  } else {
-//    next()
-//  }
-// })
+UserSchema.post("validate", function (error, doc, next) {
+ if (error) {
+    next(createError(400, error))
+  } else {
+   next()
+  }
+ })
 
 UserSchema.statics.checkCredentials = async function (email, password) {
   const user = await this.findOne({ email })

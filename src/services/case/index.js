@@ -6,7 +6,7 @@ import threeDModel from "./schema.js";
 
 const threeDrouter = express.Router();
 
-threeDrouter.post("/", JWTAuthMiddleware, async (req, res, next) => {
+threeDrouter.post("/",  async (req, res, next) => {
   try {
     const newthreeD = new threeDModel(req.body);
     console.log(req.body)
@@ -17,7 +17,7 @@ threeDrouter.post("/", JWTAuthMiddleware, async (req, res, next) => {
   }
 });
 
-threeDrouter.get("/",JWTAuthMiddleware, async (req, res, next) => {
+threeDrouter.get("/",async (req, res, next) => {
   try {
     const total3D = await threeDModel.find();
 

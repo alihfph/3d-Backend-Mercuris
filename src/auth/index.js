@@ -7,25 +7,27 @@ import UserModel from "../services/users/schema.js"
 
 export const JWTAuthMiddleware = async (req, res, next) => {
   try {
-    const token = req.header("Authorization").replace("Bearer ", "")
-    const decoded = await verifyJWT(token)
-    const user = await UserModel.findOne({
-      _id: decoded._id,
-    })
+    console.log(req.cookies.accessToken, "this is token")
+    if (req.cookies && req.cookies.accessToken) {
+      const accessToken = req.cookies.accessToken;
+       
+      const decoded = await verifyJWT(accessToken);
 
-    if (!user) {
-      throw new Error()
+      const user = await UserModel.findById(decoded._id);
+         console.log(user, "this is user")
+      if (user) {
+        req.user = user;
+        next()
+      } else {
+        throw new Error("User not found!");
+      }
     }
-
-    req.user = user
-    next()
-  } catch (e) {
-    console.log(e)
-    const err = new Error("Please authenticate")
-    err.httpStatusCode = 401
-    next(err)
+  } catch (error) {
+    console.log(error)
+    next(error);
   }
-}
+};
+
   export const authorize =
   (allowedRoles) =>
   async (req, res, next) => {
