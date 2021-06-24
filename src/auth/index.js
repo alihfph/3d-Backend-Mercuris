@@ -14,7 +14,7 @@ export const JWTAuthMiddleware = async (req, res, next) => {
       const decoded = await verifyJWT(accessToken);
 
       const user = await UserModel.findById(decoded._id);
-         console.log(user, "this is user")
+        
       if (user) {
         req.user = user;
         next()
@@ -35,7 +35,7 @@ export const JWTAuthMiddleware = async (req, res, next) => {
       if (allowedRoles.includes(req.user.role)) {
         next()
       } else {
-        next(createError(403, "Not allowed!"))
+        next(createError(403, "You are not allowed!"))
       }
     } else {
       next(createError(401, "Please log in!"))
