@@ -40,6 +40,7 @@ threeDrouter.get("/:id",JWTAuthMiddleware, async (req, res, next) => {
 
 threeDrouter.put("/:id",JWTAuthMiddleware, async (req, res, next) => {
   try {
+    console.log(req.param.id)
     const modified3D = await threeDModel.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -49,7 +50,7 @@ threeDrouter.put("/:id",JWTAuthMiddleware, async (req, res, next) => {
       }
     );
     if (modified3D) {
-      res.send(modified3D);
+      res.send(modified3D, "modified data");
     } else {
       next();
     }
