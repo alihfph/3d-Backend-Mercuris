@@ -7,6 +7,8 @@ const { Schema, model } = mongoose
 
 const UserSchema = new Schema({
   firstName: { type: String },
+  lasttName: { type: String },
+  userName: { type: String },
   email: { type: String, required: true },
   password: { type: String, required: true },
   role: { type: String, enum: ["Admin", "User"] },
