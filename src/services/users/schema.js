@@ -6,9 +6,12 @@ import createError from "http-errors"
 const { Schema, model } = mongoose
 
 const UserSchema = new Schema({
-  firstName: { type: String },
-  lasttName: { type: String },
-  userName: { type: String },
+  firstName: { type: String, equired: true  },
+  lasttName: { type: String, equired: true  },
+  userName: { type: String, equired: true  },
+  capstonProject: { type: String, equired: true  },
+  linkedinProfile: { type: String, equired: true  },
+  phoneNumber: { type: String, equired: true  },
   email: { type: String, required: true },
   password: { type: String, required: true },
   role: { type: String, enum: ["Admin", "User"] },
