@@ -50,7 +50,7 @@ threeDrouter.put("/:id",JWTAuthMiddleware, async (req, res, next) => {
       }
     );
     if (modified3D) {
-      res.send(modified3D, "modified data");
+      res.send(modified3D, "modified has been data");
     } else {
       next();
     }
@@ -64,7 +64,7 @@ threeDrouter.delete("/:id",JWTAuthMiddleware, async (req, res, next) => {
   try {
     const threeD = await threeDModel.findByIdAndDelete(req.params.id);
     if (threeD) {
-      res.send("Deleted");
+      res.send("ID Deleted");
     } else {
       next();
     }
